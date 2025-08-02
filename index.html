@@ -3,131 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adi's Toolbox</title>
+  <title>Adi's Toolkit</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f9f9f9;
-      padding: 2rem;
-      line-height: 1.6;
+      margin: 2rem;
+      background-color: white;
+      color: black;
+      transition: background-color 0.3s, color 0.3s;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
+    .dark-mode {
+      background-color: #121212;
+      color: white;
     }
-    section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .converter {
+      margin: 1.5rem 0;
     }
-    label, input {
-      display: block;
+    label, select, input {
+      display: inline-block;
       margin: 0.5rem 0;
-      font-size: 1rem;
     }
-    input {
-      padding: 0.5rem;
-      width: 100%;
-      max-width: 300px;
-      font-size: 1rem;
+    button {
+      margin-top: 1rem;
     }
-    .result {
-      margin-top: 0.5rem;
-      font-weight: bold;
+    .timezone {
+      margin: 1rem 0;
+    }
+    .toggle-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <button class="toggle-btn" onclick="toggleTheme()">Toggle Light/Dark</button>
+  <h1>Adi's Personal Toolkit</h1>
 
-  <h1>🧰 Adi's Toolbox</h1>
-
-  <section>
-    <h2>🌍 Timezone Converter</h2>
-    <iframe src="https://www.worldtimebuddy.com/" width="100%" height="500" frameborder="0"></iframe>
+  <section class="converter">
+    <h2>Timezone Clock (24h)</h2>
+    <div id="timezones"></div>
   </section>
 
-  <section>
-    <h2>🔄 Flow Converter</h2>
-
-    <h3>LPS ↔ m³/h</h3>
-    <label for="lps">Liters per second (LPS):</label>
-    <input type="number" id="lps" oninput="convertLpsToM3h()" placeholder="Enter LPS">
-    <div class="result" id="lpsToM3h">m³/h: —</div>
-
-    <label for="m3h">Cubic meters per hour (m³/h):</label>
-    <input type="number" id="m3h" oninput="convertM3hToLps()" placeholder="Enter m³/h">
-    <div class="result" id="m3hToLps">LPS: —</div>
-
-    <hr>
-
-    <h3>GPM ↔ LPS</h3>
-    <label for="gpm1">Gallons per minute (GPM):</label>
-    <input type="number" id="gpm1" oninput="convertGpmToLps()" placeholder="Enter GPM">
-    <div class="result" id="gpmToLps">LPS: —</div>
-
-    <label for="lps2">Liters per second (LPS):</label>
-    <input type="number" id="lps2" oninput="convertLpsToGpm()" placeholder="Enter LPS">
-    <div class="result" id="lpsToGpm">GPM: —</div>
-
-    <hr>
-
-    <h3>GPM ↔ m³/h</h3>
-    <label for="gpm2">Gallons per minute (GPM):</label>
-    <input type="number" id="gpm2" oninput="convertGpmToM3h()" placeholder="Enter GPM">
-    <div class="result" id="gpmToM3h">m³/h: —</div>
-
-    <label for="m3h2">Cubic meters per hour (m³/h):</label>
-    <input type="number" id="m3h2" oninput="convertM3hToGpm()" placeholder="Enter m³/h">
-    <div class="result" id="m3hToGpm">GPM: —</div>
+  <section class="converter">
+    <h2>LPS ↔ m³/h Converter</h2>
+    <input type="number" id="lps" placeholder="Liters per second (LPS)" oninput="convertLpsM3()">
+    ↔
+    <input type="number" id="m3h" placeholder="Cubic meters per hour (m³/h)" oninput="convertM3Lps()">
   </section>
 
-  <section>
-    <h2>🖼 PNG to ICO Converter</h2>
-    <p>Use an external tool: <a href="https://cloudconvert.com/png-to-ico" target="_blank">CloudConvert PNG to ICO</a></p>
+  <section class="converter">
+    <h2>GPM ↔ LPS Converter</h2>
+    <input type="number" id="gpm1" placeholder="Gallons per minute (GPM)" oninput="convertGpmLps()">
+    ↔
+    <input type="number" id="lps2" placeholder="Liters per second (LPS)" oninput="convertLpsGpm()">
+  </section>
+
+  <section class="converter">
+    <h2>GPM ↔ m³/h Converter</h2>
+    <input type="number" id="gpm2" placeholder="Gallons per minute (GPM)" oninput="convertGpmM3()">
+    ↔
+    <input type="number" id="m3h2" placeholder="Cubic meters per hour (m³/h)" oninput="convertM3Gpm()">
   </section>
 
   <script>
-    // LPS ↔ m³/h
-    function convertLpsToM3h() {
+    const timezones = [
+      { label: 'Taipei', zone: 'Asia/Taipei' },
+      { label: 'Los Angeles', zone: 'America/Los_Angeles' },
+      { label: 'Chicago', zone: 'America/Chicago' },
+      { label: 'UK', zone: 'Europe/London' },
+      { label: 'New York', zone: 'America/New_York' },
+      { label: 'Melbourne', zone: 'Australia/Melbourne' },
+    ];
+
+    function updateClocks() {
+      const container = document.getElementById("timezones");
+      container.innerHTML = "";
+      const now = new Date();
+      timezones.forEach(tz => {
+        const time = new Intl.DateTimeFormat('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: tz.zone,
+          hour12: false
+        }).format(now);
+        const div = document.createElement("div");
+        div.className = "timezone";
+        div.innerHTML = `<strong>${tz.label}:</strong> ${time}`;
+        container.appendChild(div);
+      });
+    }
+    setInterval(updateClocks, 1000);
+    updateClocks();
+
+    function convertLpsM3() {
       const lps = parseFloat(document.getElementById('lps').value);
-      const result = isNaN(lps) ? '—' : (lps * 3.6).toFixed(3);
-      document.getElementById('lpsToM3h').textContent = `m³/h: ${result}`;
+      document.getElementById('m3h').value = lps ? (lps * 3.6).toFixed(3) : '';
     }
-
-    function convertM3hToLps() {
+    function convertM3Lps() {
       const m3h = parseFloat(document.getElementById('m3h').value);
-      const result = isNaN(m3h) ? '—' : (m3h / 3.6).toFixed(3);
-      document.getElementById('m3hToLps').textContent = `LPS: ${result}`;
+      document.getElementById('lps').value = m3h ? (m3h / 3.6).toFixed(3) : '';
     }
 
-    // GPM ↔ LPS
-    function convertGpmToLps() {
+    function convertGpmLps() {
       const gpm = parseFloat(document.getElementById('gpm1').value);
-      const result = isNaN(gpm) ? '—' : (gpm * 0.0630902).toFixed(3);
-      document.getElementById('gpmToLps').textContent = `LPS: ${result}`;
+      document.getElementById('lps2').value = gpm ? (gpm * 0.06309).toFixed(3) : '';
     }
-
-    function convertLpsToGpm() {
+    function convertLpsGpm() {
       const lps = parseFloat(document.getElementById('lps2').value);
-      const result = isNaN(lps) ? '—' : (lps / 0.0630902).toFixed(3);
-      document.getElementById('lpsToGpm').textContent = `GPM: ${result}`;
+      document.getElementById('gpm1').value = lps ? (lps / 0.06309).toFixed(3) : '';
     }
 
-    // GPM ↔ m³/h
-    function convertGpmToM3h() {
+    function convertGpmM3() {
       const gpm = parseFloat(document.getElementById('gpm2').value);
-      const result = isNaN(gpm) ? '—' : (gpm * 0.2271247).toFixed(3);
-      document.getElementById('gpmToM3h').textContent = `m³/h: ${result}`;
+      document.getElementById('m3h2').value = gpm ? (gpm * 0.2271).toFixed(3) : '';
+    }
+    function convertM3Gpm() {
+      const m3h = parseFloat(document.getElementById('m3h2').value);
+      document.getElementById('gpm2').value = m3h ? (m3h / 0.2271).toFixed(3) : '';
     }
 
-    function convertM3hToGpm() {
-      const m3h = parseFloat(document.getElementById('m3h2').value);
-      const result = isNaN(m3h) ? '—' : (m3h / 0.2271247).toFixed(3);
-      document.getElementById('m3hToGpm').textContent = `GPM: ${result}`;
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
     }
   </script>
-
 </body>
 </html>
