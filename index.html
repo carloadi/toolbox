@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adi's Toolbox</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label, input {
+      display: block;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+    input {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      font-size: 1rem;
+    }
+    .result {
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧰 Adi's Toolbox</h1>
+
+  <section>
+    <h2>🌍 Timezone Converter</h2>
+    <iframe src="https://www.worldtimebuddy.com/" width="100%" height="500" frameborder="0"></iframe>
+  </section>
+
+  <section>
+    <h2>🔄 Flow Converter</h2>
+
+    <h3>LPS ↔ m³/h</h3>
+    <label for="lps">Liters per second (LPS):</label>
+    <input type="number" id="lps" oninput="convertLpsToM3h()" placeholder="Enter LPS">
+    <div class="result" id="lpsToM3h">m³/h: —</div>
+
+    <label for="m3h">Cubic meters per hour (m³/h):</label>
+    <input type="number" id="m3h" oninput="convertM3hToLps()" placeholder="Enter m³/h">
+    <div class="result" id="m3hToLps">LPS: —</div>
+
+    <hr>
+
+    <h3>GPM ↔ LPS</h3>
+    <label for="gpm1">Gallons per minute (GPM):</label>
+    <input type="number" id="gpm1" oninput="convertGpmToLps()" placeholder="Enter GPM">
+    <div class="result" id="gpmToLps">LPS: —</div>
+
+    <label for="lps2">Liters per second (LPS):</label>
+    <input type="number" id="lps2" oninput="convertLpsToGpm()" placeholder="Enter LPS">
+    <div class="result" id="lpsToGpm">GPM: —</div>
+
+    <hr>
+
+    <h3>GPM ↔ m³/h</h3>
+    <label for="gpm2">Gallons per minute (GPM):</label>
+    <input type="number" id="gpm2" oninput="convertGpmToM3h()" placeholder="Enter GPM">
+    <div class="result" id="gpmToM3h">m³/h: —</div>
+
+    <label for="m3h2">Cubic meters per hour (m³/h):</label>
+    <input type="number" id="m3h2" oninput="convertM3hToGpm()" placeholder="Enter m³/h">
+    <div class="result" id="m3hToGpm">GPM: —</div>
+  </section>
+
+  <section>
+    <h2>🖼 PNG to ICO Converter</h2>
+    <p>Use an external tool: <a href="https://cloudconvert.com/png-to-ico" target="_blank">CloudConvert PNG to ICO</a></p>
+  </section>
+
+  <script>
+    // LPS ↔ m³/h
+    function convertLpsToM3h() {
+      const lps = parseFloat(document.getElementById('lps').value);
+      const result = isNaN(lps) ? '—' : (lps * 3.6).toFixed(3);
+      document.getElementById('lpsToM3h').textContent = `m³/h: ${result}`;
+    }
+
+    function convertM3hToLps() {
+      const m3h = parseFloat(document.getElementById('m3h').value);
+      const result = isNaN(m3h) ? '—' : (m3h / 3.6).toFixed(3);
+      document.getElementById('m3hToLps').textContent = `LPS: ${result}`;
+    }
+
+    // GPM ↔ LPS
+    function convertGpmToLps() {
+      const gpm = parseFloat(document.getElementById('gpm1').value);
+      const result = isNaN(gpm) ? '—' : (gpm * 0.0630902).toFixed(3);
+      document.getElementById('gpmToLps').textContent = `LPS: ${result}`;
+    }
+
+    function convertLpsToGpm() {
+      const lps = parseFloat(document.getElementById('lps2').value);
+      const result = isNaN(lps) ? '—' : (lps / 0.0630902).toFixed(3);
+      document.getElementById('lpsToGpm').textContent = `GPM: ${result}`;
+    }
+
+    // GPM ↔ m³/h
+    function convertGpmToM3h() {
+      const gpm = parseFloat(document.getElementById('gpm2').value);
+      const result = isNaN(gpm) ? '—' : (gpm * 0.2271247).toFixed(3);
+      document.getElementById('gpmToM3h').textContent = `m³/h: ${result}`;
+    }
+
+    function convertM3hToGpm() {
+      const m3h = parseFloat(document.getElementById('m3h2').value);
+      const result = isNaN(m3h) ? '—' : (m3h / 0.2271247).toFixed(3);
+      document.getElementById('m3hToGpm').textContent = `GPM: ${result}`;
+    }
+  </script>
+
+</body>
+</html>
