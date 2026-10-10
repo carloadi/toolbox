@@ -57,3 +57,16 @@ The common calculation base is litres per second. One minute is 60 seconds; one 
 No deployment is performed by this project setup. After approval, run `npm ci` and `npm run build`, then serve the contents of `dist/` on any HTTPS static host. No server-side runtime or secrets are needed. The relative Vite base supports deployment at a root or subdirectory; keep the full generated directory together.
 
 Serve `manifest.webmanifest` as `application/manifest+json`, JavaScript as JavaScript, and ensure `sw.js` is available at the app's deployment directory. Avoid long-lived caching for `index.html`, `sw.js`, and `registerSW.js`; hashed assets can have immutable caching. Test the deployed path, installation, offline reload, and an update from an earlier version. Updates activate automatically; save/export important table rows before reloading. Do not deploy publicly without approval.
+
+### GitHub Pages
+
+The repository includes `.github/workflows/deploy-pages.yml`, which builds and publishes the `pumpflow-pwa` branch. To activate it:
+
+1. Open the repository's **Settings → Pages**.
+2. Under **Build and deployment → Source**, select **GitHub Actions**.
+3. Open **Actions → Publish PumpFlow to GitHub Pages**. Choose **Run workflow**, select `pumpflow-pwa`, and run it. If a run already failed before Pages was enabled, rerun it after enabling Pages.
+4. Wait for the build and deployment jobs to turn green, then open the deployment URL shown in the run or Pages settings. The expected URL is `https://carloadi.github.io/toolbox/` unless a custom domain is configured.
+
+If GitHub reports that the `github-pages` environment rejects the branch, open **Settings → Environments → github-pages** and allow `pumpflow-pwa` under deployment branches. If Actions are disabled, enable them under **Settings → Actions → General**, allowing the official GitHub actions used by this workflow.
+
+Future pushes to `pumpflow-pwa` automatically update the website. Publishing this workflow requires repository settings access; uploading the workflow alone does not activate Pages or prove a successful deployment. The website is public and replaces any existing Pages website for this repository. It does not restrict access to team members. On an iPad or iPhone, open the published URL in Safari and choose **Share → Add to Home Screen**. Android users can use Chrome's **Install app** or **Add to Home screen** menu. Visit online once before using the app offline.
